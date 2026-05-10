@@ -86,6 +86,8 @@ function MiniTag({ label, variant }: { label: string; variant: 'domain' | 'role'
 
 // ── 구인글 카드 ──────────────────────────────────────────────
 function PostCard({ post, onDetail }: { post: Post; onDetail: () => void }) {
+  const [btnHovered, setBtnHovered] = useState(false);
+  const [cardHovered, setCardHovered] = useState(false);
   const tags = post.tags ?? [];
   const roles = post.roles ?? [];
   const domainTags = tags.filter(t => DOMAIN_TAGS.includes(t));
@@ -94,16 +96,24 @@ function PostCard({ post, onDetail }: { post: Post; onDetail: () => void }) {
   return (
     <div
       className="post-card"
+      onMouseEnter={() => setCardHovered(true)}
+      onMouseLeave={() => setCardHovered(false)}
       style={{
-        background: '#FFFFFF',
-        border: '1.5px solid rgba(232, 160, 180, 0.3)',
+        background: cardHovered ? '#FFF5F8' : '#FFFFFF',
+        border: cardHovered
+          ? '1.5px solid rgba(224, 80, 117, 0.35)'
+          : '1.5px solid rgba(232, 160, 180, 0.3)',
         borderRadius: '20px',
         padding: '22px 20px',
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
-        boxShadow: '0 3px 16px rgba(184, 48, 96, 0.07)',
-        cursor: 'default',
+        boxShadow: cardHovered
+          ? '0 8px 28px rgba(184, 48, 96, 0.13)'
+          : '0 3px 16px rgba(184, 48, 96, 0.07)',
+        transform: cardHovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'all 0.2s ease',
+        cursor: 'pointer',
       }}
     >
       {/* 분야 + 역할 태그 */}
@@ -144,16 +154,21 @@ function PostCard({ post, onDetail }: { post: Post; onDetail: () => void }) {
         </div>
         <button
           onClick={onDetail}
+          onMouseEnter={() => setBtnHovered(true)}
+          onMouseLeave={() => setBtnHovered(false)}
           style={{
             fontSize: '0.75rem',
-            color: '#E05075',
+            color: btnHovered ? '#B83060' : '#E05075',
             fontWeight: 600,
             flexShrink: 0,
             marginLeft: '8px',
-            background: 'none',
+            background: btnHovered ? 'rgba(224, 80, 117, 0.07)' : 'none',
             border: 'none',
+            borderRadius: '50px',
             cursor: 'pointer',
-            padding: 0,
+            padding: btnHovered ? '4px 10px' : '4px 0',
+            transform: btnHovered ? 'translateX(2px)' : 'translateX(0)',
+            transition: 'all 0.18s ease',
           }}
         >
           자세히 →

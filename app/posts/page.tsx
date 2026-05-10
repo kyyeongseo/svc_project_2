@@ -157,17 +157,20 @@ function PostCard({ post, onDetail }: { post: Post; onDetail: () => void }) {
           onMouseEnter={() => setBtnHovered(true)}
           onMouseLeave={() => setBtnHovered(false)}
           style={{
-            fontSize: '0.75rem',
-            color: btnHovered ? '#B83060' : '#E05075',
+            fontSize: '0.73rem',
+            color: btnHovered ? '#FFFFFF' : '#E05075',
             fontWeight: 600,
             flexShrink: 0,
             marginLeft: '8px',
-            background: btnHovered ? 'rgba(224, 80, 117, 0.07)' : 'none',
-            border: 'none',
+            background: btnHovered
+              ? 'linear-gradient(135deg, #E05075, #B83060)'
+              : 'rgba(224, 80, 117, 0.08)',
+            border: '1.5px solid rgba(224, 80, 117, 0.35)',
             borderRadius: '50px',
             cursor: 'pointer',
-            padding: btnHovered ? '4px 10px' : '4px 0',
-            transform: btnHovered ? 'translateX(2px)' : 'translateX(0)',
+            padding: '5px 12px',
+            transform: btnHovered ? 'translateX(2px) scale(1.04)' : 'translateX(0) scale(1)',
+            boxShadow: btnHovered ? '0 3px 10px rgba(184, 48, 96, 0.2)' : 'none',
             transition: 'all 0.18s ease',
           }}
         >
@@ -436,6 +439,61 @@ function MatchOverlay() {
   );
 }
 
+// ── 필터 초기화 버튼 ─────────────────────────────────────────
+function ClearButton({ onClick, variant }: { onClick: () => void; variant: 'text' | 'filled' }) {
+  const [hovered, setHovered] = useState(false);
+
+  if (variant === 'text') {
+    return (
+      <button
+        onClick={onClick}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          marginTop: '6px',
+          fontSize: '0.78rem',
+          color: hovered ? '#E05075' : '#CCCCCC',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '2px 4px',
+          textDecoration: hovered ? 'none' : 'underline',
+          transition: 'color 0.15s ease',
+        }}
+      >
+        필터 초기화
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        padding: '10px 24px',
+        borderRadius: '50px',
+        fontSize: '0.88rem',
+        fontWeight: 600,
+        background: hovered
+          ? 'linear-gradient(135deg, #EC6080, #D04070)'
+          : 'linear-gradient(135deg, #E05075, #B83060)',
+        color: 'white',
+        border: 'none',
+        cursor: 'pointer',
+        boxShadow: hovered
+          ? '0 6px 22px rgba(184,48,96,0.32)'
+          : '0 4px 16px rgba(184,48,96,0.22)',
+        transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
+        transition: 'all 0.18s ease',
+      }}
+    >
+      필터 초기화
+    </button>
+  );
+}
+
 // ── 메인 페이지 ──────────────────────────────────────────────
 export default function PostsPage() {
   const router = useRouter();
@@ -614,23 +672,7 @@ export default function PostsPage() {
             </div>
 
             {/* 필터 초기화 */}
-            {hasFilter && (
-              <button
-                onClick={clearAll}
-                style={{
-                  marginTop: '6px',
-                  fontSize: '0.78rem',
-                  color: '#CCCCCC',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                  textDecoration: 'underline',
-                }}
-              >
-                필터 초기화
-              </button>
-            )}
+            {hasFilter && <ClearButton onClick={clearAll} variant="text" />}
           </div>
 
           {/* 결과 카운트 */}
@@ -669,24 +711,7 @@ export default function PostsPage() {
               <p className="text-sm mb-6" style={{ color: '#BBBBBB' }}>
                 {hasFilter ? '필터를 바꿔보거나 초기화해봐요' : '첫 번째로 팀원을 모집해봐요!'}
               </p>
-              {hasFilter && (
-                <button
-                  onClick={clearAll}
-                  style={{
-                    padding: '10px 24px',
-                    borderRadius: '50px',
-                    fontSize: '0.88rem',
-                    fontWeight: 600,
-                    background: 'linear-gradient(135deg, #E05075, #B83060)',
-                    color: 'white',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 16px rgba(184,48,96,0.22)',
-                  }}
-                >
-                  필터 초기화
-                </button>
-              )}
+              {hasFilter && <ClearButton onClick={clearAll} variant="filled" />}
             </div>
           )}
 

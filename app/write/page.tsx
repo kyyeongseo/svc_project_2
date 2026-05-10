@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 const DOMAIN_TAGS = ['IT', '커머스', '교육', '헬스케어', '푸드', '패션', '소셜', '기타'];
 const ROLE_TAGS = ['개발자', '디자이너', '기획자', '마케터', '영업', '재무', '기타'];
@@ -140,7 +141,7 @@ export default function WritePage() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = {
       projectName: !form.projectName.trim(),
       teamIntro: !form.teamIntro.trim(),
@@ -149,6 +150,25 @@ export default function WritePage() {
     if (newErrors.projectName || newErrors.teamIntro) return;
 
     setAnimPhase('letter');
+
+    const roles = form.roles
+      .map(r => (r === '기타' ? form.roleEtc || '기타' : r))
+      .filter(Boolean);
+    const domainTags = form.domains
+      .map(d => (d === '기타' ? form.domainEtc || '기타' : d))
+      .filter(Boolean);
+    const personalityTags = form.personalities
+      .map(p => (p === '기타' ? form.personalityEtc || '기타' : p))
+      .filter(Boolean);
+
+    await supabase.from('posts').insert({
+      project_name: form.projectName.trim(),
+      summary: form.teamIntro.trim(),
+      description: form.teamIntro.trim(),
+      roles,
+      tags: [...domainTags, ...personalityTags],
+    });
+
     // letterSend 애니메이션(2.6s) + 여유(0.2s)
     setTimeout(() => setAnimPhase('done'), 2800);
   };

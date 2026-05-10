@@ -1,26 +1,115 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body, "Noto Sans KR", Arial, Helvetica, sans-serif);
+}
+
+.font-title {
+  font-family: var(--font-title, "Gowun Batang", Georgia, serif);
+}
+
+/* 배경 하트 둥실둥실 떠다니는 애니메이션 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(-5deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+    opacity: 0.55;
+  }
+}
+
+/* 중앙 큰 하트 살짝 두근거리는 애니메이션 */
+@keyframes pulseHeart {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.1); }
+}
+
+/* 버튼 클릭 시 심장 박동 애니메이션 — 두 번 두근 */
+@keyframes heartbeat {
+  0%   { transform: scale(1); }
+  12%  { transform: scale(1.28); }
+  24%  { transform: scale(1); }
+  38%  { transform: scale(1.18); }
+  52%  { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+.heartbeat-btn {
+  animation: heartbeat 0.85s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+.pulse-heart {
+  animation: pulseHeart 1.8s ease-in-out infinite;
+}
+
+/* 작성 완료 — 💌 등장 후 위로 상승하며 사라짐 (단일 연속 애니메이션) */
+@keyframes letterSend {
+  /* 등장 */
+  0%  { opacity: 0; transform: translateY(0px)   scale(0.2)  rotate(-12deg); }
+  16% { opacity: 1; transform: translateY(0px)   scale(1.14) rotate(4deg);   }
+  26% { opacity: 1; transform: translateY(0px)   scale(1)    rotate(0deg);   }
+  /* 잠깐 머뭄 */
+  38% { opacity: 1; transform: translateY(-10px) scale(1.02) rotate(-1deg);  }
+  /* 상승하며 소멸 */
+  100%{ opacity: 0; transform: translateY(-150px) scale(0.72) rotate(-5deg); }
+}
+
+/* 성공 화면 페이드인 */
+@keyframes fadeInUp {
+  0%   { opacity: 0; transform: translateY(22px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 기타 입력칸 슬라이드 등장 */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.etc-slide { animation: slideDown 0.22s ease-out forwards; }
+
+.letter-send { animation: letterSend 2.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.fade-in-up  { animation: fadeInUp 0.7s ease-out forwards; }
+
+/* 구인글 카드 hover 흔들림 */
+@keyframes cardWobble {
+  0%   { transform: rotate(0deg)     translateY(0px);  }
+  18%  { transform: rotate(-2.2deg)  translateY(-5px); }
+  36%  { transform: rotate(2.2deg)   translateY(-7px); }
+  54%  { transform: rotate(-1.4deg)  translateY(-5px); }
+  72%  { transform: rotate(0.8deg)   translateY(-4px); }
+  90%  { transform: rotate(-0.2deg)  translateY(-2px); }
+  100% { transform: rotate(0deg)     translateY(0px);  }
+}
+
+.post-card { transition: box-shadow 0.3s ease; }
+.post-card:hover {
+  animation: cardWobble 0.48s ease-out;
+  box-shadow: 0 12px 40px rgba(184, 48, 96, 0.14) !important;
+}
+
+/* 랜딩페이지 대시보드 카드 hover */
+.dashboard-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  text-align: left;
+  cursor: pointer;
+}
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+/* 다이어리 입력 필드 포커스 */
+.diary-input:focus   { border-bottom-color: #E05075 !important; }
+.diary-textarea:focus {
+  border-color: #E05075 !important;
+  box-shadow: 0 0 0 3px rgba(224, 80, 117, 0.07);
 }
